@@ -12,7 +12,6 @@ class PostTable{
                 PRIMARY KEY (`id`)) ENGINE = InnoDB;";
             $stmt = $pdo->prepare($query);
             $stmt->execute();
-            //check if table post is not exists
             self::addForeignkeyToUser($pdo);
         }catch(PDOException $e){
             die('error '. $e);

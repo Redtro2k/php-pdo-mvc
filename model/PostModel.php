@@ -26,5 +26,21 @@ class PostModel{
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     }
+    public function showPost($id){
+        $query = "SELECT * FROM `post` WHERE id=:id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    public function updatePost($id, $arr){
+        $query = "UPDATE `post` SET title=:title, content=:content WHERE id=:id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':title', $arr['title'], PDO::PARAM_STR);
+        $stmt->bindParam(':content', $arr['content'], PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);      
+        $stmt->execute();  
+    }
 }
 ?>

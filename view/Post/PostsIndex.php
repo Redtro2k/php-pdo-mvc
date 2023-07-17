@@ -14,17 +14,32 @@
     if(isset($_POST['delete'])){
         $post->deletePost($post_id);
     }
+    if(isset($_GET['edit'])){
+        $get_post = $post->showPost($_GET['edit']);
+    }
+    if(isset($_POST['update'])){
+        $arr = [
+            'title' => $title,
+            'content' => $content
+        ];
+        $post->updatePost($get_post['id'], $arr);
+        header("Location: ../view/dashboard.php");
+    }
 ?>
 <form method="post">
     <span>Title</span>
-    <input type="text" name="title">
+    <input type="text" name="title" value="<?php echo isset($_GET['edit']) ? $get_post['title'] : null;  ?>">
     <br>
     <br>
     <span>Content</span>
     <br>
-    <textarea name="content" id="" cols="20" rows="10"></textarea>
+    <textarea name="content" id="" cols="20" rows="10"><?php echo isset($_GET['edit']) ? $get_post['content'] : null;  ?></textarea>
     <br>
-    <button type="submit" name="add">Submit</button>
+    <?php if(!isset($_GET['edit'])): ?>
+        <button type="submit" name="add">add</button>
+    <?php else: ?>
+        <button type="submit" name="update">Update</button>
+    <?php endif; ?> 
 </form>
 <ul>
     <?php foreach($post->getPosts($_SESSION['user_id']) as $post): ?>
@@ -32,9 +47,10 @@
         <span><?php echo $post['title'] ?></span>
         <br>
         <p><?php echo $post['content'] ?></p>
+        <a href="?edit=<?php echo $post['id'] ?>">Edit</a>
         <form method="post">
             <input type="hidden" name="post_id" value="<?php echo $post['id'] ?>">
-            <button type="submit" name="delete">Delete</button>
+                <button type="submit" name="delete">Delete</button>
         </form>
     </li>
     <?php endforeach; ?>
